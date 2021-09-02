@@ -6,8 +6,7 @@ import { useFetch } from '@refetty/react'
 import axios from 'axios'
 import { addDays, subDays } from 'date-fns'
 
-import { useAuth, Logo, formatDate } from '../components/'
-
+import { useAuth, Logo, formatDate, TimeBlock} from '../components/'
 
 
 const getSchedule = async ( when ) => axios({
@@ -21,14 +20,6 @@ const Header = ({children}) => (
         {children}
     </Box>
 )
-
-const TimeBlock = ({ time }) => {
-    return(
-        <Button p={8} width={150}>
-            {time}
-        </Button>
-    )
-}
  
 export default function Schedule(){
     const router = useRouter(); 
@@ -38,7 +29,6 @@ export default function Schedule(){
 
     const addDay = () => setWhen(prevState => addDays(prevState,1))
     const removeDay = () => setWhen(prevState => subDays(prevState,1))
-
 
     useEffect(() => {
         fetch(when)
