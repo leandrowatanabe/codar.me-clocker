@@ -7,17 +7,21 @@ import axios from 'axios'
 import { addDays, subDays } from 'date-fns'
 
 import { useAuth, Logo, formatDate } from '../components/'
+import { getToken } from '../config/firebase/client'
 
 
-const getAgenda = ( when ) => axios({
-    method: 'get',
-    url:'/api/agenda',
-    params:{ when },
-    // headers:{
-    //     Authorization: `Bearer ${token}`,
-
-    // }
-})
+const getAgenda = async ( when ) => {
+    const token = await getToken()
+    
+    return axios({
+        method: 'get',
+        url:'/api/agenda',
+        params:{ when },
+        headers:{
+            Authorization: `Bearer ${token}`,
+        }
+    })
+}
 
 const Header = ({children}) => (
     <Box padding={4} display="flex" alignItems="center" justifyContent="space-between"> 
