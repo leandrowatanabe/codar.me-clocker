@@ -20,7 +20,7 @@ const setSchedule = async ( data ) => axios({
     url:'/api/schedule',
     params:{
         ...data,
-        username: window.location.pathname
+        username: window.location.pathname.replace('/','')
     }
 })
 
@@ -49,7 +49,7 @@ export const TimeBlock = ({ time }) => {
     const toggle = () => setIsOpen(prevState => !prevState)
 
     const { values, handleSubmit, handleChange, handleBlur, errors, touched } = useFormik({
-        onSubmit: () => {},
+        onSubmit: (values) => setSchedule({...values, when: time}),
         initialValues: {
             name: '',
             phone: ''
