@@ -7,5 +7,4 @@ export const Input = ({ error, label, touched, ...props}) => (
         <InputBase {...props} />
         {touched && <FormHelperText textColor="#e74c3c">{error}</FormHelperText>}
     </FormControl>
-    
 )

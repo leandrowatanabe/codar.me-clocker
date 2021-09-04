@@ -17,7 +17,7 @@ import {
   InputGroup
 } from '@chakra-ui/react'
 
-import { Logo, useAuth  } from '../components'
+import { Logo, useAuth } from '../components'
 
 const validationSchema = yup.object().shape({
   email: yup.string().email('E-mail inválido').required('Preenchimento obrigatório'),
@@ -26,7 +26,7 @@ const validationSchema = yup.object().shape({
 })
 
 export default function Home() {
-  const [auth,{ signup }] = useAuth()
+  const [auth, { signup }] = useAuth()
   const router = useRouter()
 
   const {
@@ -53,7 +53,7 @@ export default function Home() {
 
   return (
     <Container p={4} centerContent>
-      <Logo />
+      <Logo size={200} />
       <Box p={4} mt={8}>
         <Text>Crie sua agenda compartilhada</Text>
       </Box>

@@ -1,5 +1,5 @@
-import { firebaseServer } from "../../config/firebase/server"
-import { addHours, format, differenceInHours } from "date-fns"
+import { firebaseServer } from '../../config/firebase/server'
+import { differenceInHours, format, addHours } from 'date-fns'
 
 const db = firebaseServer.firestore()
 const profile = db.collection('profiles')
@@ -11,17 +11,17 @@ const totalHours = differenceInHours(endAt, startAt)
 
 const timeBlocks = []
 
-for(let blockIndex = 0; blockIndex <= totalHours; blockIndex++){
+for (let blockIndex = 0; blockIndex <= totalHours; blockIndex++) {
     const time = format(addHours(startAt, blockIndex), 'HH:mm')
     timeBlocks.push(time)
 }
 
 const getUserId = async (username) => {
     const profileDoc = await profile
-        .where('username','==', username)
+        .where('username', '==', username)
         .get()
 
-    const { userId } = profileDoc.docs[0].data
+    const { userId } = profileDoc.docs[0].data()
 
     return userId
 }
@@ -29,46 +29,48 @@ const getUserId = async (username) => {
 
 const setSchedule = async (req, res) => {
     const userId = await getUserId(req.body.username)
-    const doc = await agenda.doc(`${userId}#${req.body.when}`).get()
+    const docId = `${userId}#${req.body.date}#${req.body.time}`
+    const doc = await agenda.doc(docId).get()
 
-    if(doc.exists){
-        return res.status(400)
+    if (doc.exists) {
+        
+        return res.status(400).json({message: 'Time blocked!'})
     }
 
-    const block = await agenda.doc(`${userId}#${req.body.when}`).set({
+    const block = await agenda.doc(docId).set({
         userId,
-        when: req.body.when,
+        date: req.body.date,
+        time: req.body.time,
         name: req.body.name,
-        name: req.body.phone,
+        phone: req.body.phone,
     })
 
     return res.status(200).json(block)
 }
 
-const getSchedule = async (req, res) => {
-    try{
+const getSchedule = (req, res) => {
+    try {
         // const profileDoc = await profile
-        //     .where('username','==', req.query.username)
+        //     .where('username', '==', req.query.username)
         //     .get()
 
         // const snapshot = await agenda
-        //     .where('userId','==', profileDoc.userId)
-        //     .where('when','==',req.query.when)
+        //     .where('userId', '==', profileDoc.userId)
+        //     .where('when', '==', req.query.when)
         //     .get()
-        
+
         return res.status(200).json(timeBlocks)
-    }catch(error){
+    } catch (error) {
         console.log('FB ERROR:', error)
         return res.status(401)
     }
 }
 
-
 const methods = {
     POST: setSchedule,
-    GET: getSchedule,
+    GET: getSchedule
 }
 
-export default async (req,res) => methods[req.method] 
+export default async (req, res) => methods[req.method]
     ? methods[req.method](req, res)
     : res.status(405)
