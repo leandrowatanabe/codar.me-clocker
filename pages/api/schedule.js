@@ -21,6 +21,10 @@ const getUserId = async (username) => {
         .where('username', '==', username)
         .get()
 
+    if(!profileDoc.docs.length){
+        return false
+    }
+
     const { userId } = profileDoc.docs[0].data()
 
     return userId
@@ -52,6 +56,10 @@ const getSchedule = async (req, res) => {
     try {
         const userId = await getUserId(req.query.username)
 
+        if(!userId){
+            return res.status(404).json({message: 'Usuario Invalido'})
+        }
+
         const snapshot = await agenda
             .where('userId','==', userId)
             .where('date','==', req.query.date)
@@ -64,7 +72,7 @@ const getSchedule = async (req, res) => {
             time,
             isBlocked: !!docs.find(doc => doc.time === time)
         }))
-        
+
         return res.status(200).json(result)
     } catch (error) {
         console.log('FB ERROR:', error)

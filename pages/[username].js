@@ -7,13 +7,13 @@ import { addDays, subDays, format } from 'date-fns'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { Button, Container, Box, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
 
-import { formatDate, useAuth, Logo, TimeBlock } from './../components'
+import { formatDate, useAuth, Logo, TimeBlock } from '../components'
 
-const getSchedule = async (when) => axios({
+const getSchedule = async ({when, username}) => axios({
     method: 'get',
     url: '/api/schedule',
     params: { 
-         username: window.location.pathname.replace('/',''),
+         username,
          date: format(when,'yy-MM-dd'),
         },
 })
@@ -34,9 +34,10 @@ export default function Schedule() {
     const addDay = () => setWhen(prevState => addDays(prevState, 1))
     const removeDay = () => setWhen(prevState => subDays(prevState, 1))
 
+
     useEffect(() => {
-        fetch(when)
-    }, [when])
+        fetch({when, username: router.query.username})
+    }, [when, router.query.username])
 
     return (
         <Container>
