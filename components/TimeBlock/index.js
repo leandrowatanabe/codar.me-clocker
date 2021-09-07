@@ -17,17 +17,17 @@ import {
 
 import { Input } from '../Input'
 
-const setSchedule = async ({date, ...data}) => axios({
+const setSchedule = async ({ date, ...data }) => axios({
     method: 'post',
     url: '/api/schedule',
     data: {
         ...data,
-        date: format(date,'yy-MM-dd'),
+        date: format(date, 'yyyy-MM-dd'),
         username: window.location.pathname.replace('/', ''),
     },
 })
 
-const ModalTimeBlock = ({ isOpen, onClose, onComplete, children, isSubmitting }) => (
+const ModalTimeBlock = ({ isOpen, onClose, onComplete, isSubmitting, children }) => (
     <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -48,19 +48,20 @@ const ModalTimeBlock = ({ isOpen, onClose, onComplete, children, isSubmitting })
 )
 
 
-export const TimeBlock = ({ time, date, disabled }) => {
+export const TimeBlock = ({ time, date, disabled, onSuccess }) => {
     const [isOpen, setIsOpen] = useState(false)
     const toggle = () => setIsOpen(prevState => !prevState)
 
-    const { values, handleSubmit, handleChange, handleBlur, errors, touched, isSubmitting} = useFormik({
+    const { values, handleSubmit, handleChange, handleBlur, errors, touched, isSubmitting } = useFormik({
         onSubmit: async (values) => {
-            try{
+            try {
                 await setSchedule({ ...values, time, date })
                 toggle()
-            } catch(error){
+                onSuccess()
+            } catch (error) {
                 console.log(error)
             }
-        },            
+        },
         initialValues: {
             name: '',
             email: ''
@@ -74,11 +75,12 @@ export const TimeBlock = ({ time, date, disabled }) => {
     return (
         <Button p={8} bg="blue.500" color="white" onClick={toggle} disabled={disabled}>
             {time}
-            {!disabled && <ModalTimeBlock 
-                isOpen={isOpen} 
-                onClose={toggle} 
+            {!disabled && <ModalTimeBlock
+                isOpen={isOpen}
+                onClose={toggle}
                 onComplete={handleSubmit}
-                isSubmitting={isSubmitting}>
+                isSubmitting={isSubmitting}
+            >
                 <>
                     <Input
                         label="Nome:"
