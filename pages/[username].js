@@ -5,7 +5,7 @@ import { addDays, subDays, format } from 'date-fns'
 import axios from 'axios'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Container, Box, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Button, Container, Box, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
 
 import { formatDate, Logo, TimeBlock } from '../components'
 
@@ -39,10 +39,12 @@ export default function Schedule() {
         refresh()
     }, [when, router.query.username])
 
+
     return (
         <Container>
             <Header>
                 <Logo size={150} />
+                <Button onClick={() => router.push('/agenda')}>Agenda</Button>
             </Header>
 
             <Box mt={8} display="flex" alignItems="center">
