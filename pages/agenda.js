@@ -72,8 +72,7 @@ export default function Agenda() {
 
             {data?.map(doc => (
                 <AgendaBlock key={doc.time} userId={doc.userId} date={doc.date} time={doc.time} name={doc.name} phone={doc.phone} mt={4} />
-            ))
-            }
+            ))}
         </Container>
     )
 }
