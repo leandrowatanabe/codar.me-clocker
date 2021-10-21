@@ -28,7 +28,7 @@ export default function Schedule() {
     const router = useRouter()
     const [when, setWhen] = useState(() => new Date())
     const [data, { loading }, fetch] = useFetch(getSchedule, { lazy: true })
-
+    
     const addDay = () => setWhen(prevState => addDays(prevState, 1))
     const removeDay = () => setWhen(prevState => subDays(prevState, 1))
 
